@@ -1,0 +1,91 @@
+<nav class="navbar">
+  <a routerLink="/products" class="navbar-brand">ShopAdmin</a>
+  <div class="navbar-links">
+    <a routerLink="/products" class="nav-link">Produits</a>
+    <a routerLink="/categories" class="nav-link active">Catégories</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Gestion des Catégories</h1>
+  <p>{{ total() }} catégorie(s)</p>
+</div>
+
+<main class="main-content">
+  <div class="add-box">
+    <input
+      type="text"
+      class="input"
+      placeholder="Nom de la nouvelle catégorie…"
+      [value]="newName()"
+      (input)="newName.set($any($event.target).value)"
+      (keyup.enter)="addCategory()"
+    />
+    <button class="btn btn-primary" (click)="addCategory()">Ajouter</button>
+  </div>
+
+  @if (loading()) {
+    <p class="state">Chargement des catégories…</p>
+  }
+
+  @if (error() && !loading()) {
+    <div class="state error">
+      <p>{{ error() }}</p>
+      <button class="btn btn-primary" (click)="loadCategories()">Réessayer</button>
+    </div>
+  }
+
+  @if (!loading() && !error() && categories().length === 0) {
+    <p class="state">Aucune catégorie pour le moment.</p>
+  }
+
+  @if (!loading() && !error() && categories().length > 0) {
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Nom</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cat of categories(); track cat.id) {
+          <tr>
+            <td>{{ cat.id }}</td>
+            <td>
+              @if (editingId() === cat.id) {
+                <input
+                  type="text"
+                  class="input"
+                  [value]="editName()"
+                  (input)="editName.set($any($event.target).value)"
+                  (keyup.enter)="saveEdit(cat)"
+                  (keyup.escape)="cancelEdit()"
+                />
+              } @else {
+                {{ cat.name }}
+              }
+            </td>
+            <td class="actions">
+              @if (editingId() === cat.id) {
+                <button class="btn btn-primary" (click)="saveEdit(cat)">Enregistrer</button>
+                <button class="btn btn-light" (click)="cancelEdit()">Annuler</button>
+              } @else {
+                <button class="btn btn-light" (click)="startEdit(cat)">Modifier</button>
+                <button class="btn btn-danger" (click)="deleteCategory(cat)">Supprimer</button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</main>
+
+@if (toast()) {
+  <div class="toast" [class.success]="toast()!.type === 'success'" [class.error]="toast()!.type === 'error'">
+    {{ toast()!.message }}
+  </div>
+}
+
+<app-confirm-dialog #confirmDialog />

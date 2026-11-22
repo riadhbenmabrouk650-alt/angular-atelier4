@@ -27,6 +27,11 @@ export const routes: Routes = [
       import('./features/products/product-form/product-form').then(m => m.ProductFormComponent)
   },
   {
+    path: 'categories',
+    loadComponent: () =>
+      import('./features/categories/category-list/category-list').then(m => m.CategoryList)
+  },
+  {
     path: '**',
     redirectTo: 'products'
   }
