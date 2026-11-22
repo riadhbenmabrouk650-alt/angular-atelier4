@@ -1,23 +1,12 @@
 <nav class="navbar">
   <a routerLink="/products" class="navbar-brand">
-    <div class="brand-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375z"/>
-        <path fill-rule="evenodd" d="M3.087 9l.54 9.176A3 3 0 006.62 21h10.757a3 3 0 002.995-2.824L20.913 9H3.087zm6.163 3.75A.75.75 0 0110 12h4a.75.75 0 010 1.5h-4a.75.75 0 01-.75-.75z" clip-rule="evenodd"/>
-      </svg>
-    </div>
     <span>ShopAdmin</span>
   </a>
 </nav>
 
 <div class="page-wrapper">
   <div class="form-header">
-    <button class="back-btn" (click)="cancel()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"/>
-      </svg>
-      Annuler
-    </button>
+    <button class="back-btn" (click)="cancel()">← Annuler</button>
     <h1 class="form-title">{{ pageTitle() }}</h1>
   </div>
 
@@ -34,10 +23,8 @@
 
   @if (!loading()) {
     <div class="form-layout">
-      <!-- Form -->
       <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
 
-        <!-- Name -->
         <div class="form-group">
           <label class="form-label required">Nom du produit</label>
           <input
@@ -55,7 +42,6 @@
           }
         </div>
 
-        <!-- Price + Stock -->
         <div class="form-row">
           <div class="form-group">
             <label class="form-label required">Prix (€)</label>
@@ -91,18 +77,8 @@
           </div>
         </div>
 
-        <!-- Category ID + SKU -->
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">ID Catégorie</label>
-            <input
-              type="number"
-              class="form-control"
-              formControlName="category_id"
-              placeholder="Ex: 1"
-            />
-          </div>
-                   <div class="form-group">
             <label class="form-label">Catégorie</label>
             <select class="form-control" formControlName="category_id">
               <option [ngValue]="null">-- Aucune catégorie --</option>
@@ -111,9 +87,17 @@
               }
             </select>
           </div>
+          <div class="form-group">
+            <label class="form-label">SKU</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="sku"
+              placeholder="Ex: IPHONE-15-PRO"
+            />
+          </div>
         </div>
 
-        <!-- Description -->
         <div class="form-group">
           <label class="form-label">Description</label>
           <textarea
@@ -124,7 +108,6 @@
           ></textarea>
         </div>
 
-        <!-- Image URL -->
         <div class="form-group">
           <label class="form-label">URL de l'image</label>
           <input
@@ -135,7 +118,6 @@
           />
         </div>
 
-        <!-- Status Toggle -->
         <div class="form-group toggle-group">
           <label class="form-label">Statut</label>
           <div class="toggle-wrapper" (click)="toggleActive()">
@@ -148,7 +130,6 @@
           </div>
         </div>
 
-        <!-- Submit -->
         <div class="form-actions">
           <button type="button" class="btn-cancel" (click)="cancel()">Annuler</button>
           <button type="submit" class="btn-submit" [disabled]="saving()">
@@ -162,31 +143,17 @@
         </div>
       </form>
 
-      <!-- Preview -->
       <aside class="preview-panel">
         <h3 class="preview-title">Aperçu de l'image</h3>
         @if (imagePreview()) {
           <div class="preview-image-wrapper">
-            <img [src]="imagePreview()!" alt="Aperçu" class="preview-image"
-              (error)="imagePreview.set(null)" />
+            <img [src]="imagePreview()!" alt="Aperçu" class="preview-image" (error)="imagePreview.set(null)" />
           </div>
         } @else {
           <div class="preview-placeholder">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd"/>
-            </svg>
             <p>Entrez une URL d'image pour voir l'aperçu</p>
           </div>
         }
-
-        <div class="preview-tips">
-          <h4>Conseils</h4>
-          <ul>
-            <li>Format recommandé : JPEG, PNG, WebP</li>
-            <li>Ratio idéal : 4:3 ou 1:1</li>
-            <li>Taille max recommandée : 2 Mo</li>
-          </ul>
-        </div>
       </aside>
     </div>
   }
