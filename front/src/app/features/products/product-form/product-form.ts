@@ -1,9 +1,11 @@
-import { Component, signal, computed, inject, OnInit, effect } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
+import { CategoryService } from '../../../core/services/category.service';
 import { Product } from '../../../core/models/product.model';
+import { Category } from '../../../core/models/category.model';
 
 @Component({
   selector: 'app-product-form',
@@ -14,6 +16,7 @@ import { Product } from '../../../core/models/product.model';
 })
 export class ProductFormComponent implements OnInit {
   private readonly productService = inject(ProductService);
+  private readonly categoryService = inject(CategoryService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -26,6 +29,7 @@ export class ProductFormComponent implements OnInit {
   toast = signal<{ message: string; type: 'success' | 'error' } | null>(null);
 
   imagePreview = signal<string | null>(null);
+  categories = signal<Category[]>([]);
 
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -42,6 +46,8 @@ export class ProductFormComponent implements OnInit {
   submitLabel = computed(() => this.isEdit() ? 'Enregistrer les modifications' : 'Créer le produit');
 
   ngOnInit() {
+    this.loadCategories();
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit.set(true);
@@ -51,6 +57,12 @@ export class ProductFormComponent implements OnInit {
 
     this.form.get('image_url')!.valueChanges.subscribe(val => {
       this.imagePreview.set(val || null);
+    });
+  }
+
+  loadCategories() {
+    this.categoryService.getAll().subscribe({
+      next: (res) => this.categories.set(res.data)
     });
   }
 
