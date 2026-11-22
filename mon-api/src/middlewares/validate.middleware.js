@@ -15,6 +15,9 @@ const productUpdateSchema = productSchema.fork(
   ['name', 'price'],
   (field) => field.optional()
 );
+const categorySchema = Joi.object({
+  name: Joi.string().min(2).max(100).required(),
+});
 
 const validate = (schema) => (req, res, next) => {
   const { error, value } = schema.validate(req.body, { abortEarly: false });
@@ -32,4 +35,5 @@ const validate = (schema) => (req, res, next) => {
 module.exports = {
   validateCreate: validate(productSchema),
   validateUpdate: validate(productUpdateSchema),
+  validateCategory: validate(categorySchema),
 };
